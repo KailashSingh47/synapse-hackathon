@@ -10,8 +10,8 @@ load_dotenv()
 
 # Configure Google Gemini
    # Replace the text inside the quotes with your actual Google API key
-genai.configure(api_key="AIzaSyBOxCMndYUJy7qipCarnzDY8m8XknsUYCU")
-model = genai.GenerativeModel('gemini-1.5-flash') # Flash is fast and free-ish
+  genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+model = genai.GenerativeModel('gemini-1.5-flash-latest') # Flash is fast and free-ish
 
 SYSTEM_PROMPT = """You are an expert educational AI. Your task is to analyze the provided educational text and extract a Knowledge Graph.
 Identify core concepts (nodes) and relationships (edges).

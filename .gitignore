@@ -1,0 +1,8 @@
+  .env
+  backend/.env
+  venv/
+  __pycache__/
+  temp_uploads/
+  test_document.pdf
+  node_modules/
+  .next/
