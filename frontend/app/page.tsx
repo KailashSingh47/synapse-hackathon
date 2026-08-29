@@ -156,12 +156,8 @@ export default function Home() {
               </div>
             ))}
           </div>
-          <div className="flex flex-wrap justify-center gap-3 mb-8">
-            {["Active Recall", "Feynman Technique", "Dual Coding", "Adaptive Learning"].map((t) => (
-              <span key={t} className="px-4 py-2 rounded-full bg-gray-900 border border-gray-800 text-sm text-emerald-400 font-medium">🎓 {t}</span>
-            ))}
-          </div>
-          <p className="text-center text-gray-600 text-sm pb-8">Built for the Prometheus August AI Challenge</p>
+        
+          
         </section>
       </main>
     );
