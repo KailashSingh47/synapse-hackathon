@@ -1,8 +1,12 @@
-  .env
-  backend/.env
-  venv/
-  __pycache__/
-  temp_uploads/
-  test_document.pdf
-  node_modules/
-  .next/
+.env
+backend/.env
+venv/
+__pycache__/
+backend/__pycache__/
+temp_uploads/
+test_document.pdf
+backend/test_document.pdf
+node_modules/
+.next/
+frontend/node_modules/
+frontend/.next/
