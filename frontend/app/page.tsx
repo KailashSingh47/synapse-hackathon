@@ -6,7 +6,6 @@ import ReactFlow, {
   MiniMap,
   applyNodeChanges,
   applyEdgeChanges,
-  SmoothStepEdge,
 } from "reactflow";
 import "reactflow/dist/style.css";
 
@@ -32,13 +31,9 @@ export default function Home() {
   const onEdgesChange = useCallback((c: any) => setEdges((e) => applyEdgeChanges(c, e)), []);
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [chatHistory]);
 
-  // Toggle Dark Mode
   useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+    if (darkMode) document.documentElement.classList.add('dark');
+    else document.documentElement.classList.remove('dark');
   }, [darkMode]);
 
   const handleFileUpload = async (e: any) => {
@@ -53,7 +48,6 @@ export default function Home() {
       if (!res.ok) throw new Error("Backend error! Is the server running on port 8000?");
       const data = await res.json();
       
-      // Better layout for nodes
       setNodes(data.graph.nodes.map((n: any, i: number) => ({
         id: String(n.id),
         data: { label: n.label },
@@ -71,7 +65,7 @@ export default function Home() {
     } catch (err: any) { setError(err.message); } finally { setLoading(false); }
   };
 
-  const startFeynman = (edgeId: string) => {
+  const startSage = (edgeId: string) => {
     const edge = edges.find((e) => e.id === edgeId);
     if (!edge) return;
     const a = nodes.find((n) => n.id === edge.source)?.data.label;
@@ -106,7 +100,7 @@ export default function Home() {
       {/* --- HEADER --- */}
       <header className={`p-4 shadow-md flex items-center justify-between border-b transition-colors duration-300 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
         <div className="flex items-center gap-2">
-          <span className="text-2xl">🧠</span>
+          <span className="text-3xl drop-shadow-sm">🧠</span>
           <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600">
             Synapse AI
           </h1>
@@ -120,10 +114,9 @@ export default function Home() {
             {LEVELS.map((l) => <option key={l}>{l}</option>)}
           </select>
           
-          {/* Dark Mode Toggle */}
           <button 
             onClick={() => setDarkMode(!darkMode)}
-            className={`p-2 rounded-full transition-colors ${darkMode ? 'bg-gray-700 text-yellow-400 hover:bg-gray-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+            className={`p-2 rounded-full transition-colors text-xl ${darkMode ? 'bg-gray-700 hover:bg-gray-600' : 'bg-gray-100 hover:bg-gray-200'}`}
           >
             {darkMode ? '☀️' : '🌙'}
           </button>
@@ -167,7 +160,7 @@ export default function Home() {
               {[
                 { icon: "📄", title: "1. Upload PDF", desc: "Drop in any textbook chapter, lecture notes, or research paper." },
                 { icon: "🕸️", title: "2. Generate Graph", desc: "Our AI extracts core concepts and maps their relationships instantly." },
-                { icon: "🧑🏫", title: "3. Feynman Mode", desc: "Click any connection to test your understanding with our Socratic AI tutor." }
+                { icon: "🌿", title: "3. Sage Mode", desc: "Click any connection to test your understanding with our Socratic AI tutor." }
               ].map((step, i) => (
                 <div key={i} className={`p-6 rounded-2xl border transition-all hover:scale-105 hover:shadow-xl ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200 shadow-sm'}`}>
                   <div className="text-4xl mb-4">{step.icon}</div>
@@ -188,7 +181,7 @@ export default function Home() {
               onNodesChange={onNodesChange} 
               onEdgesChange={onEdgesChange} 
               fitView 
-              onEdgeClick={(_, edge) => startFeynman(edge.id)}
+              onEdgeClick={(_, edge) => startSage(edge.id)}
               proOptions={{ hideAttribution: true }}
             >
               <Background color={darkMode ? "#374151" : "#e5e7eb"} gap={20} />
@@ -201,16 +194,16 @@ export default function Home() {
             </ReactFlow>
             
             <div className={`absolute top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full text-sm font-medium shadow-md backdrop-blur-sm transition-colors ${darkMode ? 'bg-gray-800/80 text-gray-200 border border-gray-700' : 'bg-white/80 text-gray-700 border border-gray-200'}`}>
-              💡 Click any blue arrow to start Feynman Mode
+              🌿 Click any blue arrow to start Sage Mode
             </div>
           </>
         )}
 
-        {/* --- FEYNMAN CHAT SIDEBAR --- */}
+        {/* --- SAGE CHAT SIDEBAR --- */}
         {chatOpen && (
           <div className={`absolute right-0 top-0 h-full w-96 shadow-2xl border-l flex flex-col z-40 transition-transform duration-300 transform ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
-            <div className="p-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold flex justify-between items-center">
-              <span>🧑‍🏫 Feynman Mode ({level})</span>
+            <div className="p-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold flex justify-between items-center">
+              <span>🌿 Sage Mode ({level})</span>
               <button onClick={() => setChatOpen(false)} className="hover:bg-white/20 p-1 rounded-full transition">✕</button>
             </div>
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -218,7 +211,7 @@ export default function Home() {
                 <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed ${
                     m.role === "user" 
-                      ? "bg-blue-600 text-white rounded-br-none" 
+                      ? "bg-emerald-600 text-white rounded-br-none" 
                       : darkMode ? "bg-gray-700 text-gray-100 rounded-bl-none" : "bg-gray-100 text-gray-800 rounded-bl-none"
                   }`}>
                     {m.content}
@@ -228,7 +221,7 @@ export default function Home() {
               {chatLoading && (
                 <div className="flex justify-start">
                   <div className={`p-3 rounded-2xl rounded-bl-none text-sm ${darkMode ? 'bg-gray-700' : 'bg-gray-100'}`}>
-                    <span className="animate-pulse">Feynman is thinking...</span>
+                    <span className="animate-pulse">Sage is thinking...</span>
                   </div>
                 </div>
               )}
@@ -240,9 +233,9 @@ export default function Home() {
                 onChange={(e) => setChatInput(e.target.value)} 
                 onKeyDown={(e) => e.key === "Enter" && sendChat()} 
                 placeholder="Explain in your own words..." 
-                className={`flex-1 border rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition ${darkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'bg-gray-50 border-gray-300 text-gray-900'}`} 
+                className={`flex-1 border rounded-xl px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition ${darkMode ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' : 'bg-gray-50 border-gray-300 text-gray-900'}`} 
               />
-              <button onClick={sendChat} className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 rounded-xl font-medium hover:opacity-90 transition">Send</button>
+              <button onClick={sendChat} className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-4 rounded-xl font-medium hover:opacity-90 transition">Send</button>
             </div>
           </div>
         )}
