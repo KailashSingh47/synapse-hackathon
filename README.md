@@ -110,7 +110,8 @@ Form data: `file` (PDF), `level` (e.g. "High School")
 
 ## 👥 Team
 
-Built with ❤️ for the **Prometheus August AI Challenge**
+podiliichandu
+gaddameedinishanth-cyber
 
 ## 📄 License
 
