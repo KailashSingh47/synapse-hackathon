@@ -32,6 +32,7 @@ export default function Home() {
 
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [selectedNode, setSelectedNode] = useState<any>(null);
 
   useEffect(() => {
     document.documentElement.classList.add('dark');
@@ -46,6 +47,7 @@ export default function Home() {
   const onNodesChange = useCallback((c: any) => setNodes((n) => applyNodeChanges(c, n)), []);
   const onEdgesChange = useCallback((c: any) => setEdges((e) => applyEdgeChanges(c, e)), []);
 
+  // ✅ FIXED: Moved outside of loadFromHistory
   const saveToHistory = (filename: string, lvl: string, n: any[], e: any[]) => {
     setHistory((prev) => {
       const entry: HistoryEntry = { id: Date.now().toString(), filename, level: lvl, timestamp: Date.now(), nodes: n, edges: e };
@@ -55,12 +57,24 @@ export default function Home() {
     });
   };
 
+  const deleteHistoryItem = (id: string) => {
+    const updated = history.filter((h) => h.id !== id);
+    setHistory(updated);
+    localStorage.setItem("synapse_history", JSON.stringify(updated));
+  };
+
+  const clearAllHistory = () => {
+    setHistory([]);
+    localStorage.removeItem("synapse_history");
+  };
+
   const loadFromHistory = (entry: HistoryEntry) => {
     setNodes(entry.nodes);
     setEdges(entry.edges);
     setLevel(entry.level);
     setHistoryOpen(false);
     setChatOpen(false);
+    setSelectedNode(null);
   };
 
   const handleFileUpload = async (e: any) => {
@@ -77,7 +91,7 @@ export default function Home() {
 
       const flowNodes = data.graph.nodes.map((n: any, i: number) => ({
         id: String(n.id),
-        data: { label: n.label },
+        data: { label: n.label, description: n.description }, // ✅ Store description for popup
         position: { x: (i % 3) * 350 + 50, y: Math.floor(i / 3) * 250 + 50 },
         className: "custom-node",
       }));
@@ -95,6 +109,11 @@ export default function Home() {
     } catch (err: any) { setError(err.message); } finally { setLoading(false); }
   };
 
+  // ✅ ADDED: Handle node clicks to show definition
+  const handleNodeClick = (_: any, node: any) => {
+    setSelectedNode(node);
+  };
+
   const startSage = (edgeId: string) => {
     const edge = edges.find((e) => e.id === edgeId);
     if (!edge) return;
@@ -103,6 +122,7 @@ export default function Home() {
     setConcepts({ a, b, rel: edge.label || "relates to" });
     setChatHistory([{ role: "assistant", content: `Let's explore: how does ${a} ${edge.label} ${b}? Explain it in your own words!` }]);
     setChatOpen(true);
+    setSelectedNode(null); // Close node popup when opening chat
   };
 
   const sendChat = async () => {
@@ -181,7 +201,7 @@ export default function Home() {
             {LEVELS.map((l) => <option key={l}>{l}</option>)}
           </select>
           <button onClick={() => setHistoryOpen(!historyOpen)} className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-gray-800 border border-gray-700 hover:bg-gray-700 transition font-medium text-xs sm:text-sm">
-            🕘 History {history.length > 0 && `(${history.length})`}
+             History {history.length > 0 && `(${history.length})`}
           </button>
           <label className="cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold hover:opacity-90 transition shadow-md text-xs sm:text-sm">
             Upload PDF
@@ -210,15 +230,37 @@ export default function Home() {
           </div>
         )}
 
+        {/* ✅ ADDED: Node Definition Popup */}
+        {selectedNode && (
+          <div className="absolute top-20 left-1/2 -translate-x-1/2 z-30 w-80 bg-gray-800 border border-gray-700 rounded-xl shadow-2xl p-4 animate-in fade-in slide-in-from-top-4">
+            <div className="flex justify-between items-start mb-2">
+              <h3 className="font-bold text-emerald-400 text-lg">{selectedNode.data.label}</h3>
+              <button onClick={() => setSelectedNode(null)} className="text-gray-400 hover:text-white">✕</button>
+            </div>
+            <p className="text-sm text-gray-300 leading-relaxed">
+              {selectedNode.data.description || "No detailed description available for this concept."}
+            </p>
+          </div>
+        )}
+
         {nodes.length > 0 && (
           <>
-            <ReactFlow nodes={nodes} edges={edges} onNodesChange={onNodesChange} onEdgesChange={onEdgesChange} fitView onEdgeClick={(_, edge) => startSage(edge.id)} proOptions={{ hideAttribution: true }}>
+            <ReactFlow 
+              nodes={nodes} 
+              edges={edges} 
+              onNodesChange={onNodesChange} 
+              onEdgesChange={onEdgesChange} 
+              onNodeClick={handleNodeClick} // ✅ ADDED
+              fitView 
+              onEdgeClick={(_, edge) => startSage(edge.id)} 
+              proOptions={{ hideAttribution: true }}
+            >
               <Background color="#1f2937" gap={20} />
               <Controls className="!bg-gray-800 !border-gray-700 [&>button]:!bg-gray-800 [&>button]:!border-gray-700 [&>button]:!text-white" />
               <MiniMap nodeColor="#3b82f6" maskColor="rgba(3, 7, 18, 0.8)" className="!bg-gray-800 !border-gray-700" />
             </ReactFlow>
             <div className="absolute top-4 left-1/2 -translate-x-1/2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium shadow-md bg-gray-900/80 text-gray-200 border border-gray-700 max-w-[90%] text-center">
-              🌿 Click any arrow to start Sage Mode
+               Click a node for details • Click an arrow for Sage Mode
             </div>
           </>
         )}
@@ -228,15 +270,25 @@ export default function Home() {
           <div className="absolute left-0 top-0 h-full w-64 sm:w-80 bg-gray-900 border-r border-gray-800 shadow-2xl z-40 flex flex-col">
             <div className="p-3 sm:p-4 border-b border-gray-800 font-bold flex justify-between items-center">
               <span className="text-sm sm:text-base">🕘 Your Graphs</span>
-              <button onClick={() => setHistoryOpen(false)} className="hover:bg-gray-800 p-1 rounded-full">✕</button>
+              <div className="flex gap-2">
+                {history.length > 0 && (
+                  <button onClick={clearAllHistory} className="text-xs text-red-400 hover:text-red-300 px-2 py-1 rounded hover:bg-gray-800">Clear All</button>
+                )}
+                <button onClick={() => setHistoryOpen(false)} className="hover:bg-gray-800 p-1 rounded-full">✕</button>
+              </div>
             </div>
             <div className="flex-1 overflow-y-auto p-3 space-y-2">
               {history.length === 0 && <p className="text-gray-500 text-xs sm:text-sm text-center mt-8">No graphs yet. Upload a PDF!</p>}
               {history.map((h) => (
-                <button key={h.id} onClick={() => loadFromHistory(h)} className="w-full text-left p-2 sm:p-3 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 transition">
-                  <p className="font-semibold text-xs sm:text-sm truncate">📄 {h.filename}</p>
-                  <p className="text-xs text-gray-400 mt-1">{h.level} • {new Date(h.timestamp).toLocaleString()}</p>
-                </button>
+                <div key={h.id} className="group relative flex items-center gap-2">
+                  <button onClick={() => loadFromHistory(h)} className="flex-1 text-left p-2 sm:p-3 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 transition">
+                    <p className="font-semibold text-xs sm:text-sm truncate"> {h.filename}</p>
+                    <p className="text-xs text-gray-400 mt-1">{h.level} • {new Date(h.timestamp).toLocaleDateString()}</p>
+                  </button>
+                  <button onClick={() => deleteHistoryItem(h.id)} className="opacity-0 group-hover:opacity-100 p-2 text-red-400 hover:bg-gray-800 rounded-lg transition">
+                    ️
+                  </button>
+                </div>
               ))}
             </div>
           </div>
@@ -247,7 +299,7 @@ export default function Home() {
           <div className="absolute right-0 top-0 h-full w-full sm:w-96 shadow-2xl border-l border-gray-700 flex flex-col z-40 bg-gray-900">
             <div className="p-3 sm:p-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold flex justify-between items-center">
               <span className="text-sm sm:text-base">🌿 Sage Mode ({level})</span>
-              <button onClick={() => setChatOpen(false)} className="hover:bg-white/20 p-1 rounded-full transition"></button>
+              <button onClick={() => setChatOpen(false)} className="hover:bg-white/20 p-1 rounded-full transition">✕</button>
             </div>
             <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
               {chatHistory.map((m, i) => (
