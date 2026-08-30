@@ -128,36 +128,40 @@ export default function Home() {
   /* ============ LANDING PAGE ============ */
   if (view === "landing") {
     return (
-      <main className="min-h-screen bg-gray-950 text-white flex flex-col">
-        <div className="flex-1 flex flex-col items-center justify-center p-8 text-center">
-          <span className="text-7xl mb-6 animate-bounce">🧠</span>
-          <h1 className="text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400">
+      <main className="min-h-screen bg-gray-950 text-white flex flex-col overflow-x-hidden">
+        <div className="flex-1 flex flex-col items-center justify-center p-4 sm:p-8 text-center">
+          <span className="text-5xl sm:text-7xl mb-4 sm:mb-6 animate-bounce">🧠</span>
+          <h1 className="text-4xl sm:text-6xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400">
             Synapse AI
           </h1>
-          <p className="text-2xl text-gray-300 mb-2 max-w-2xl">Transform passive reading into <span className="text-emerald-400 font-bold">active learning</span>.</p>
-          <p className="text-gray-500 mb-10 max-w-xl">Upload any educational PDF and watch AI build an interactive Knowledge Graph, then master it with Sage — your Socratic tutor.</p>
-          <button onClick={() => setView("app")} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white text-xl font-bold px-10 py-4 rounded-2xl shadow-2xl shadow-purple-900/50 transition-all hover:scale-105">
+          <p className="text-lg sm:text-2xl text-gray-300 mb-2 max-w-xs sm:max-w-2xl">Transform passive reading into <span className="text-emerald-400 font-bold">active learning</span>.</p>
+          <p className="text-gray-500 mb-6 sm:mb-10 text-sm sm:text-base max-w-xs sm:max-w-xl">Upload any educational PDF and watch AI build an interactive Knowledge Graph, then master it with Sage — your Socratic tutor.</p>
+          <button onClick={() => setView("app")} className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white text-base sm:text-xl font-bold px-6 sm:px-10 py-3 sm:py-4 rounded-xl sm:rounded-2xl shadow-2xl shadow-purple-900/50 transition-all hover:scale-105 w-full sm:w-auto max-w-xs sm:max-w-none">
             Enter Synapse →
           </button>
         </div>
 
-        <section className="max-w-5xl mx-auto p-8 w-full">
-          <h2 className="text-3xl font-bold text-center mb-10">How it works</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <section className="max-w-xs sm:max-w-5xl mx-auto p-4 sm:p-8 w-full">
+          <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-10">How it works</h2>
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 mb-8 sm:mb-12">
             {[
               { icon: "📄", title: "1. Upload PDF", desc: "Drop in any textbook chapter, lecture notes, or research paper." },
               { icon: "🕸️", title: "2. Explore Graph", desc: "AI extracts core concepts and maps their relationships instantly." },
               { icon: "🌿", title: "3. Sage Mode", desc: "Click any connection and get quizzed by a tutor that never gives the answer." },
             ].map((s, i) => (
-              <div key={i} className="p-6 rounded-2xl bg-gray-900 border border-gray-800 hover:border-purple-700 hover:scale-105 transition-all">
-                <div className="text-4xl mb-4">{s.icon}</div>
-                <h3 className="text-xl font-bold mb-2">{s.title}</h3>
-                <p className="text-gray-400">{s.desc}</p>
+              <div key={i} className="p-4 sm:p-6 rounded-2xl bg-gray-900 border border-gray-800 hover:border-purple-700 hover:scale-105 transition-all">
+                <div className="text-3xl sm:text-4xl mb-3 sm:mb-4">{s.icon}</div>
+                <h3 className="text-lg sm:text-xl font-bold mb-2">{s.title}</h3>
+                <p className="text-gray-400 text-sm sm:text-base">{s.desc}</p>
               </div>
             ))}
           </div>
-        
-          
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 sm:mb-8">
+            {["Active Recall", "Feynman Technique", "Dual Coding", "Adaptive Learning"].map((t) => (
+              <span key={t} className="px-3 sm:px-4 py-1 sm:py-2 rounded-full bg-gray-900 border border-gray-800 text-xs sm:text-sm text-emerald-400 font-medium">🎓 {t}</span>
+            ))}
+          </div>
+          <p className="text-center text-gray-600 text-xs sm:text-sm pb-4 sm:pb-8">Built for the Prometheus August AI Challenge</p>
         </section>
       </main>
     );
@@ -165,21 +169,21 @@ export default function Home() {
 
   /* ============ APP (DARK ONLY) ============ */
   return (
-    <main className="h-screen w-full flex flex-col bg-gray-950 text-white">
-      <header className="p-4 shadow-md flex items-center justify-between border-b border-gray-800 bg-gray-900">
-        <div className="flex items-center gap-3">
-          <button onClick={() => setView("landing")} className="text-gray-400 hover:text-white transition text-sm px-2 py-1 rounded-lg hover:bg-gray-800">← Home</button>
-          <span className="text-2xl">🧠</span>
-          <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Synapse AI</h1>
+    <main className="h-screen w-full flex flex-col bg-gray-950 text-white overflow-x-hidden">
+      <header className="p-3 sm:p-4 shadow-md flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-gray-800 bg-gray-900">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <button onClick={() => setView("landing")} className="text-gray-400 hover:text-white transition text-xs sm:text-sm px-2 py-1 rounded-lg hover:bg-gray-800">← Home</button>
+          <span className="text-xl sm:text-2xl">🧠</span>
+          <h1 className="text-base sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">Synapse AI</h1>
         </div>
-        <div className="flex items-center gap-3">
-          <select value={level} onChange={(e) => setLevel(e.target.value)} className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 font-medium text-white">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <select value={level} onChange={(e) => setLevel(e.target.value)} className="bg-gray-800 border border-gray-700 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 font-medium text-white text-xs sm:text-sm">
             {LEVELS.map((l) => <option key={l}>{l}</option>)}
           </select>
-          <button onClick={() => setHistoryOpen(!historyOpen)} className="px-4 py-2 rounded-lg bg-gray-800 border border-gray-700 hover:bg-gray-700 transition font-medium">
+          <button onClick={() => setHistoryOpen(!historyOpen)} className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-gray-800 border border-gray-700 hover:bg-gray-700 transition font-medium text-xs sm:text-sm">
             🕘 History {history.length > 0 && `(${history.length})`}
           </button>
-          <label className="cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition shadow-md">
+          <label className="cursor-pointer bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg font-semibold hover:opacity-90 transition shadow-md text-xs sm:text-sm">
             Upload PDF
             <input type="file" accept=".pdf" className="hidden" onChange={handleFileUpload} />
           </label>
@@ -189,20 +193,20 @@ export default function Home() {
       <div className="flex-1 relative overflow-hidden">
         {loading && (
           <div className="absolute inset-0 z-50 flex flex-col items-center justify-center bg-gray-950/90">
-            <div className="w-16 h-16 border-4 border-gray-700 border-t-purple-500 rounded-full animate-spin mb-4"></div>
-            <p className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 animate-pulse">Synapse is thinking...</p>
+            <div className="w-12 h-12 sm:w-16 sm:h-16 border-4 border-gray-700 border-t-purple-500 rounded-full animate-spin mb-3 sm:mb-4"></div>
+            <p className="text-base sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400 animate-pulse text-center px-4">Synapse is thinking...</p>
           </div>
         )}
 
         {error && (
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 p-4 rounded-lg shadow-lg border bg-red-900/50 border-red-700 text-red-200">{error}</div>
+          <div className="absolute top-4 left-1/2 -translate-x-1/2 z-50 p-3 sm:p-4 rounded-lg shadow-lg border bg-red-900/50 border-red-700 text-red-200 text-xs sm:text-sm max-w-[90%] text-center">{error}</div>
         )}
 
         {!loading && nodes.length === 0 && (
-          <div className="h-full flex flex-col items-center justify-center text-gray-500">
-            <span className="text-6xl mb-4">🕸️</span>
-            <p className="text-xl font-medium">Upload a PDF to generate your Knowledge Graph</p>
-            <p className="text-sm mt-2">or open one from your History</p>
+          <div className="h-full flex flex-col items-center justify-center text-gray-500 p-4">
+            <span className="text-4xl sm:text-6xl mb-3 sm:mb-4">🕸️</span>
+            <p className="text-base sm:text-xl font-medium text-center">Upload a PDF to generate your Knowledge Graph</p>
+            <p className="text-xs sm:text-sm mt-2 text-center">or open one from your History</p>
           </div>
         )}
 
@@ -213,7 +217,7 @@ export default function Home() {
               <Controls className="!bg-gray-800 !border-gray-700 [&>button]:!bg-gray-800 [&>button]:!border-gray-700 [&>button]:!text-white" />
               <MiniMap nodeColor="#3b82f6" maskColor="rgba(3, 7, 18, 0.8)" className="!bg-gray-800 !border-gray-700" />
             </ReactFlow>
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 px-4 py-2 rounded-full text-sm font-medium shadow-md bg-gray-900/80 text-gray-200 border border-gray-700">
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium shadow-md bg-gray-900/80 text-gray-200 border border-gray-700 max-w-[90%] text-center">
               🌿 Click any arrow to start Sage Mode
             </div>
           </>
@@ -221,16 +225,16 @@ export default function Home() {
 
         {/* --- HISTORY SIDEBAR --- */}
         {historyOpen && (
-          <div className="absolute left-0 top-0 h-full w-80 bg-gray-900 border-r border-gray-800 shadow-2xl z-40 flex flex-col">
-            <div className="p-4 border-b border-gray-800 font-bold flex justify-between items-center">
-              <span>🕘 Your Graphs</span>
+          <div className="absolute left-0 top-0 h-full w-64 sm:w-80 bg-gray-900 border-r border-gray-800 shadow-2xl z-40 flex flex-col">
+            <div className="p-3 sm:p-4 border-b border-gray-800 font-bold flex justify-between items-center">
+              <span className="text-sm sm:text-base">🕘 Your Graphs</span>
               <button onClick={() => setHistoryOpen(false)} className="hover:bg-gray-800 p-1 rounded-full">✕</button>
             </div>
             <div className="flex-1 overflow-y-auto p-3 space-y-2">
-              {history.length === 0 && <p className="text-gray-500 text-sm text-center mt-8">No graphs yet. Upload a PDF!</p>}
+              {history.length === 0 && <p className="text-gray-500 text-xs sm:text-sm text-center mt-8">No graphs yet. Upload a PDF!</p>}
               {history.map((h) => (
-                <button key={h.id} onClick={() => loadFromHistory(h)} className="w-full text-left p-3 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 transition">
-                  <p className="font-semibold text-sm truncate">📄 {h.filename}</p>
+                <button key={h.id} onClick={() => loadFromHistory(h)} className="w-full text-left p-2 sm:p-3 rounded-xl bg-gray-800 hover:bg-gray-700 border border-gray-700 transition">
+                  <p className="font-semibold text-xs sm:text-sm truncate">📄 {h.filename}</p>
                   <p className="text-xs text-gray-400 mt-1">{h.level} • {new Date(h.timestamp).toLocaleString()}</p>
                 </button>
               ))}
@@ -240,29 +244,29 @@ export default function Home() {
 
         {/* --- SAGE CHAT SIDEBAR --- */}
         {chatOpen && (
-          <div className="absolute right-0 top-0 h-full w-96 shadow-2xl border-l border-gray-700 flex flex-col z-40 bg-gray-900">
-            <div className="p-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold flex justify-between items-center">
-              <span>🌿 Sage Mode ({level})</span>
-              <button onClick={() => setChatOpen(false)} className="hover:bg-white/20 p-1 rounded-full transition">✕</button>
+          <div className="absolute right-0 top-0 h-full w-full sm:w-96 shadow-2xl border-l border-gray-700 flex flex-col z-40 bg-gray-900">
+            <div className="p-3 sm:p-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold flex justify-between items-center">
+              <span className="text-sm sm:text-base">🌿 Sage Mode ({level})</span>
+              <button onClick={() => setChatOpen(false)} className="hover:bg-white/20 p-1 rounded-full transition"></button>
             </div>
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4">
               {chatHistory.map((m, i) => (
                 <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed ${m.role === "user" ? "bg-emerald-600 text-white rounded-br-none" : "bg-gray-800 text-gray-100 rounded-bl-none"}`}>
+                  <div className={`max-w-[85%] p-2 sm:p-3 rounded-2xl text-xs sm:text-sm leading-relaxed ${m.role === "user" ? "bg-emerald-600 text-white rounded-br-none" : "bg-gray-800 text-gray-100 rounded-bl-none"}`}>
                     {m.content}
                   </div>
                 </div>
               ))}
               {chatLoading && (
                 <div className="flex justify-start">
-                  <div className="p-3 rounded-2xl rounded-bl-none text-sm bg-gray-800"><span className="animate-pulse">Sage is thinking...</span></div>
+                  <div className="p-2 sm:p-3 rounded-2xl rounded-bl-none text-xs sm:text-sm bg-gray-800"><span className="animate-pulse">Sage is thinking...</span></div>
                 </div>
               )}
               <div ref={chatEndRef} />
             </div>
-            <div className="p-4 border-t border-gray-700 flex gap-2">
-              <input value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && sendChat()} placeholder="Explain in your own words..." className="flex-1 bg-gray-800 border border-gray-600 rounded-xl px-4 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
-              <button onClick={sendChat} className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-4 rounded-xl font-medium hover:opacity-90 transition">Send</button>
+            <div className="p-3 sm:p-4 border-t border-gray-700 flex gap-2">
+              <input value={chatInput} onChange={(e) => setChatInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && sendChat()} placeholder="Explain in your own words..." className="flex-1 bg-gray-800 border border-gray-600 rounded-xl px-3 sm:px-4 py-2 text-xs sm:text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-500" />
+              <button onClick={sendChat} className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-3 sm:px-4 rounded-xl font-medium hover:opacity-90 transition text-xs sm:text-sm">Send</button>
             </div>
           </div>
         )}
