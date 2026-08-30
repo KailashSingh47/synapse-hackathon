@@ -181,7 +181,7 @@ export default function Home() {
               <span key={t} className="px-3 sm:px-4 py-1 sm:py-2 rounded-full bg-gray-900 border border-gray-800 text-xs sm:text-sm text-emerald-400 font-medium">🎓 {t}</span>
             ))}
           </div>
-          <p className="text-center text-gray-600 text-xs sm:text-sm pb-4 sm:pb-8">Built for the Prometheus August AI Challenge</p>
+
         </section>
       </main>
     );
